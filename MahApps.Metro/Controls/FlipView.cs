@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -464,6 +466,9 @@ namespace MahApps.Metro.Controls
                 }
             }
         }
-
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new GenericAutomationPeer<FlipView>(this,  AutomationControlType.List);
+        }
     }
 }

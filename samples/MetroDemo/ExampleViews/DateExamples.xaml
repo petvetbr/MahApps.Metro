@@ -51,9 +51,9 @@
             <StackPanel Grid.Row="0"
                         Grid.Column="1"
                         VerticalAlignment="Top">
-                <Label Content="Calendar" Style="{DynamicResource DescriptionHeaderStyle}" />
+                <Label Content="Calendar" Style="{DynamicResource DescriptionHeaderStyle}"  />
 
-                <Calendar Margin="5" />
+                <Calendar Margin="5" AutomationProperties.AutomationId="Cal" />
                 <Calendar Margin="5" IsEnabled="False" />
             </StackPanel>
 
@@ -157,6 +157,7 @@
                                                  IsEnabled="{Binding Path=IsChecked, ElementName=DateTimePickerIsEnabled, Mode=TwoWay}"
                                                  IsReadOnly="{Binding Path=IsChecked, ElementName=DateTimePickerIsReadOnly, Mode=TwoWay}"
                                                  Orientation="{Binding Path=SelectedItem, ElementName=DateTimePickerOrientation, Mode=TwoWay}"
+                                                 Name="DtPickerTest"
                                                  PickerVisibility="{Binding Path=SelectedItem, ElementName=DateTimePickerPickerVisibility, Mode=TwoWay}" />
                         <GroupBox Header="Current time">
                             <Controls:DateTimePicker Culture="{Binding Path=SelectedItem, ElementName=DateTimePickerCulture, TargetNullValue={x:Static globalization:CultureInfo.CurrentCulture}}"
@@ -164,6 +165,8 @@
                                                      IsClockVisible="{Binding Path=IsChecked, ElementName=DateTimePickerIsClockVisible, Mode=TwoWay}"
                                                      IsEnabled="{Binding Path=IsChecked, ElementName=DateTimePickerIsEnabled, Mode=TwoWay}"
                                                      IsReadOnly="{Binding Path=IsChecked, ElementName=DateTimePickerIsReadOnly, Mode=TwoWay}"
+                                                     AutomationProperties.AutomationId="AnUniqueValue"
+                                                      Name="DtPickerTest2"
                                                      Orientation="{Binding Path=SelectedItem, ElementName=DateTimePickerOrientation, Mode=TwoWay}"
                                                      PickerVisibility="{Binding Path=SelectedItem, ElementName=DateTimePickerPickerVisibility, Mode=TwoWay}">
                                 <i:Interaction.Behaviors>

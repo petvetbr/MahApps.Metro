@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -216,6 +218,10 @@ namespace MahApps.Metro.Controls
         void DropDownButton_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            return new GenericAutomationPeer<DropDownButton>(this, AutomationControlType.Button);
         }
     }
 }

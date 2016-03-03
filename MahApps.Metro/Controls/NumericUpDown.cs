@@ -13,7 +13,7 @@ namespace MahApps.Metro.Controls
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
-
+    using System.Windows.Media;
     /// <summary>
     ///     Represents a Windows spin box (also known as an up-down control) that displays numeric values.
     /// </summary>
@@ -178,10 +178,10 @@ namespace MahApps.Metro.Controls
         private double _internalLargeChange = DefaultInterval * 100;
         private double _intervalValueSinceReset;
         private bool _manualChange;
-        internal RepeatButton _repeatDown;
-        internal RepeatButton _repeatUp;
-        internal TextBox _valueTextBox;
-        internal ScrollViewer _scrollViewer;
+        private RepeatButton _repeatDown;
+        private RepeatButton _repeatUp;
+        private TextBox _valueTextBox;
+        private ScrollViewer _scrollViewer;
 
         static NumericUpDown()
         {
@@ -1235,25 +1235,19 @@ namespace MahApps.Metro.Controls
 
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            var elements = new List<UIElement>();
-
-            elements.Add(this._repeatDown);
-            elements.Add(this._repeatUp);
-            elements.Add(this._valueTextBox);
-            return new NumericUpDownAutomationPeer<NumericUpDown>(this, elements, AutomationControlType.Spinner);
+            return new GenericAutomationPeer<NumericUpDown>(this,  AutomationControlType.Spinner);
         }
     }
 
-    public class NumericUpDownAutomationPeer<T> : FrameworkElementAutomationPeer where T : FrameworkElement
+    public class GenericAutomationPeer<T> : FrameworkElementAutomationPeer where T : FrameworkElement
     {
-        public NumericUpDownAutomationPeer(T owner, IEnumerable<UIElement> elements, AutomationControlType controlType)
+        public GenericAutomationPeer(T owner, AutomationControlType controlType)
             : base(owner)
         {
-            _elementList = elements;
+            
             _controlType = controlType;
         }
 
-        private IEnumerable<UIElement> _elementList;
         AutomationControlType _controlType;
         /// <summary>
         /// <see cref="AutomationPeer.GetClassNameCore"/>
@@ -1276,7 +1270,16 @@ namespace MahApps.Metro.Controls
         /// </summary>
         protected override List<AutomationPeer> GetChildrenCore()
         {
-            var peers=_elementList.Where(p=>p!= null).Select(p=>  CreatePeerForElement(p)).ToList();
+            var el = TreeHelper.FindChildren<FrameworkElement>(Owner, true)
+                .Where(p=>!string.IsNullOrWhiteSpace(p.Name));
+            // var onlyParents = el.Where(p => !el.Contains(TreeHelper.GetParentObject(p)));
+            var peers = el.Select(p => CreatePeerForElement((UIElement)p))
+                .Where(p => p != null)
+                .ToList();
+
+            var elements = peers.SelectMany(p => p.GetChildren()??new List<AutomationPeer>());
+
+
             return peers;
         }
         /// <summary>

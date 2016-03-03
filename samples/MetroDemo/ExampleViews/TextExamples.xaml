@@ -260,6 +260,8 @@
                 <Label Content="Interval=&quot;5&quot;" />
                 <Controls:NumericUpDown Controls:TextBoxHelper.ClearTextButton="True"
                                         ButtonsAlignment="Left"
+                                        AutomationProperties.Name="teste"
+                                        AutomationProperties.AutomationId="teste"
                                         HasDecimals="{Binding ElementName=HasDecimalsCheckBox, Path=IsChecked, Mode=TwoWay}"
                                         Interval="5"
                                         IsReadOnly="{Binding ElementName=ReadOnlyCheck, Path=IsChecked, Mode=TwoWay}"

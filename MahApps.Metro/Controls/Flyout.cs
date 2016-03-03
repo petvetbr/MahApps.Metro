@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -370,7 +372,8 @@ namespace MahApps.Metro.Controls
         {
             var flyout = (Flyout)dependencyObject;
 
-            Action openedChangedAction = () => {
+            Action openedChangedAction = () =>
+            {
                 if (e.NewValue != e.OldValue)
                 {
                     if (flyout.AreAnimationsEnabled)
@@ -439,7 +442,8 @@ namespace MahApps.Metro.Controls
         {
             var flyout = (Flyout)dependencyObject;
 
-            Action autoCloseEnabledChangedAction = () => {
+            Action autoCloseEnabledChangedAction = () =>
+            {
                 if (e.NewValue != e.OldValue)
                 {
                     if ((bool)e.NewValue)
@@ -463,7 +467,8 @@ namespace MahApps.Metro.Controls
         {
             var flyout = (Flyout)dependencyObject;
 
-            Action autoCloseIntervalChangedAction = () => { 
+            Action autoCloseIntervalChangedAction = () =>
+            {
                 if (e.NewValue != e.OldValue)
                 {
                     flyout.InitializeAutoCloseTimer();
@@ -527,7 +532,7 @@ namespace MahApps.Metro.Controls
             {
                 // first focus itself
                 this.Focus();
-                
+
                 if (this.FocusedElement != null)
                 {
                     this.FocusedElement.Focus();
@@ -591,7 +596,7 @@ namespace MahApps.Metro.Controls
         ContentPresenter PART_Header;
         ContentPresenter PART_Content;
         Thumb windowTitleThumb;
-
+        
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
@@ -765,5 +770,17 @@ namespace MahApps.Metro.Controls
                     break;
             }
         }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+
+            elements.Add(PART_Header);
+            elements.Add(PART_Content);
+            elements.Add(windowTitleThumb);
+
+            return new GenericAutomationPeer<Flyout>(this,  AutomationControlType.Window);
+
+        }
+
     }
 }
