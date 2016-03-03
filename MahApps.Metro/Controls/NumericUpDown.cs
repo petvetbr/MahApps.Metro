@@ -1,12 +1,15 @@
 namespace MahApps.Metro.Controls
 {
+    using Controls;
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
     using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
     using System.Windows;
+    using System.Windows.Automation.Peers;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
@@ -175,10 +178,10 @@ namespace MahApps.Metro.Controls
         private double _internalLargeChange = DefaultInterval * 100;
         private double _intervalValueSinceReset;
         private bool _manualChange;
-        private RepeatButton _repeatDown;
-        private RepeatButton _repeatUp;
-        private TextBox _valueTextBox;
-        private ScrollViewer _scrollViewer;
+        internal RepeatButton _repeatDown;
+        internal RepeatButton _repeatUp;
+        internal TextBox _valueTextBox;
+        internal ScrollViewer _scrollViewer;
 
         static NumericUpDown()
         {
@@ -1228,6 +1231,63 @@ namespace MahApps.Metro.Controls
             }
 
             _removeFromText = new Tuple<string, string>(tailing, leading);
+        }
+
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+
+            elements.Add(this._repeatDown);
+            elements.Add(this._repeatUp);
+            elements.Add(this._valueTextBox);
+            return new NumericUpDownAutomationPeer<NumericUpDown>(this, elements, AutomationControlType.Spinner);
+        }
+    }
+
+    public class NumericUpDownAutomationPeer<T> : FrameworkElementAutomationPeer where T : FrameworkElement
+    {
+        public NumericUpDownAutomationPeer(T owner, IEnumerable<UIElement> elements, AutomationControlType controlType)
+            : base(owner)
+        {
+            _elementList = elements;
+            _controlType = controlType;
+        }
+
+        private IEnumerable<UIElement> _elementList;
+        AutomationControlType _controlType;
+        /// <summary>
+        /// <see cref="AutomationPeer.GetClassNameCore"/>
+        /// </summary>
+        /// <returns></returns>
+        protected override string GetClassNameCore()
+        {
+            return Owner.GetType().Name;
+        }
+
+        /// <summary>
+        /// <see cref="AutomationPeer.GetAutomationControlTypeCore"/>
+        /// </summary>
+        protected override AutomationControlType GetAutomationControlTypeCore()
+        {
+            return _controlType;
+        }
+        /// <summary>
+        /// <see cref="AutomationPeer.GetChildrenCore"/>
+        /// </summary>
+        protected override List<AutomationPeer> GetChildrenCore()
+        {
+            var peers=_elementList.Where(p=>p!= null).Select(p=>  CreatePeerForElement(p)).ToList();
+            return peers;
+        }
+        /// <summary>
+        /// <see cref="AutomationPeer.IsControlElementCore"/>
+        /// </summary>
+        override protected bool IsControlElementCore()
+        {
+            // Return true if control is not part of a ControlTemplate
+            var ctr = (T)Owner;
+            DependencyObject templatedParent = ctr.TemplatedParent;
+            return templatedParent == null || templatedParent is ContentPresenter; // If the templatedParent is a ContentPresenter, this control is generated from a DataTemplate
         }
     }
 }
