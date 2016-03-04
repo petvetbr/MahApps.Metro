@@ -221,7 +221,10 @@ namespace MahApps.Metro.Controls
         }
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericAutomationPeer<DropDownButton>(this, AutomationControlType.Button);
+            var elements = new List<UIElement>();
+            elements.Add(menu);
+            elements.Add(clickButton);
+            return new GenericAutomationPeer<DropDownButton>(this,elements, AutomationControlType.Button);
         }
     }
 }

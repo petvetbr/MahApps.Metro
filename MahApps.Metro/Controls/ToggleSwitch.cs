@@ -13,6 +13,8 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using MahApps.Metro.Converters;
+using System.Windows.Automation.Peers;
+using System.Collections.Generic;
 
 namespace MahApps.Metro.Controls
 {
@@ -372,6 +374,15 @@ namespace MahApps.Metro.Controls
                 IsChecked,
                 Content
             );
+        }
+
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+
+            // elements.AddRange(TreeHelper.FindChildren<FrameworkElement>(this, true));
+          
+            return new GenericAutomationPeer<ToggleSwitch>(this, elements, AutomationControlType.Button);
         }
     }
 }

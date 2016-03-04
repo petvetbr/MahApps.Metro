@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -286,5 +288,16 @@ namespace MahApps.Metro.Controls
             IsExpanded = false;
             Mouse.RemovePreviewMouseDownOutsideCapturedElementHandler(this, OutsideCapturedElementHandler);
         }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+            elements.Add(_clickButton);
+            elements.Add(_expander);
+            elements.Add(_listBox);
+            elements.Add(_popup);
+            return new GenericAutomationPeer<SplitButton>(this, elements, AutomationControlType.Window);
+
+        }
+
     }
 }

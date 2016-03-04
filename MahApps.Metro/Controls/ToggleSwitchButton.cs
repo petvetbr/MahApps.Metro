@@ -6,6 +6,8 @@ using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Data;
+using System.Windows.Automation.Peers;
+using System.Collections.Generic;
 
 namespace MahApps.Metro.Controls
 {
@@ -223,5 +225,14 @@ namespace MahApps.Metro.Controls
                 _ThumbTranslate.X = destination;
             }
         }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+            elements.Add(_DraggingThumb);
+            elements.Add(_SwitchTrack);
+            elements.Add(_ThumbIndicator);
+            return new GenericAutomationPeer<ToggleSwitchButton>(this, elements, AutomationControlType.Button);
+        }
+        
     }
 }

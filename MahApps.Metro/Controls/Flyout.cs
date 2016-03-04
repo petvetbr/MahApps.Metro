@@ -773,12 +773,14 @@ namespace MahApps.Metro.Controls
         protected override AutomationPeer OnCreateAutomationPeer()
         {
             var elements = new List<UIElement>();
+            //root
+            var headerElem = TreeHelper.FindChildren<FrameworkElement>(this, true);
+            //var thumbElem = TreeHelper.FindChildren<FrameworkElement>(windowTitleThumb, true);
+            elements.AddRange(headerElem);
+            //elements.Add(root);
+            //elements.AddRange(thumbElem);
 
-            elements.Add(PART_Header);
-            elements.Add(PART_Content);
-            elements.Add(windowTitleThumb);
-
-            return new GenericAutomationPeer<Flyout>(this,  AutomationControlType.Window);
+            return new GenericAutomationPeer<Flyout>(this, elements, AutomationControlType.Window);
 
         }
 

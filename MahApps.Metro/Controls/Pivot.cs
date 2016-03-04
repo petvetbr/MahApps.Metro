@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
@@ -151,5 +153,16 @@ namespace MahApps.Metro.Controls
                 }
             }
         }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+            elements.Add(scroller);
+            elements.Add(headers);
+            elements.Add(mediator);
+           
+            return new GenericAutomationPeer<Pivot>(this, elements, AutomationControlType.Pane);
+
+        }
+      
     }
 }

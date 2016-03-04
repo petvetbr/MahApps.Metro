@@ -1235,19 +1235,23 @@ namespace MahApps.Metro.Controls
 
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericAutomationPeer<NumericUpDown>(this,  AutomationControlType.Spinner);
+            var elements = new List<UIElement>();
+            elements.Add(_repeatUp);
+            elements.Add(_repeatDown);
+            elements.Add(_valueTextBox);
+            return new GenericAutomationPeer<NumericUpDown>(this,elements,  AutomationControlType.Spinner);
         }
     }
 
     public class GenericAutomationPeer<T> : FrameworkElementAutomationPeer where T : FrameworkElement
     {
-        public GenericAutomationPeer(T owner, AutomationControlType controlType)
+        public GenericAutomationPeer(T owner, IEnumerable<UIElement> elements, AutomationControlType controlType)
             : base(owner)
         {
-            
+            _elements = elements;
             _controlType = controlType;
         }
-
+        IEnumerable<UIElement> _elements;
         AutomationControlType _controlType;
         /// <summary>
         /// <see cref="AutomationPeer.GetClassNameCore"/>
@@ -1270,14 +1274,15 @@ namespace MahApps.Metro.Controls
         /// </summary>
         protected override List<AutomationPeer> GetChildrenCore()
         {
-            var el = TreeHelper.FindChildren<FrameworkElement>(Owner, true)
-                .Where(p=>!string.IsNullOrWhiteSpace(p.Name));
+            //var el = TreeHelper.FindChildren<FrameworkElement>(Owner, true)
+            //    .Where(p=>!string.IsNullOrWhiteSpace(p.Name));
             // var onlyParents = el.Where(p => !el.Contains(TreeHelper.GetParentObject(p)));
-            var peers = el.Select(p => CreatePeerForElement((UIElement)p))
+            var peers = _elements.Where(p=>p!=null)
+                .Select(p => CreatePeerForElement((UIElement)p))
                 .Where(p => p != null)
                 .ToList();
 
-            var elements = peers.SelectMany(p => p.GetChildren()??new List<AutomationPeer>());
+            //var elements = peers.SelectMany(p => p.GetChildren()??new List<AutomationPeer>());
 
 
             return peers;

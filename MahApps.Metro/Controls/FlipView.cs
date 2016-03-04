@@ -56,7 +56,7 @@ namespace MahApps.Metro.Controls
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(FlipView), new FrameworkPropertyMetadata(typeof(FlipView)));
         }
-        
+
         public FlipView()
         {
             this.Unloaded += FlipView_Unloaded;
@@ -275,7 +275,8 @@ namespace MahApps.Metro.Controls
         {
             controlsVisibilityOverride = false;
 
-            ExecuteWhenLoaded(this, () => {
+            ExecuteWhenLoaded(this, () =>
+            {
                 backButton.Visibility = Visibility.Visible;
                 forwardButton.Visibility = Visibility.Visible;
             });
@@ -286,7 +287,8 @@ namespace MahApps.Metro.Controls
         public void HideControlButtons()
         {
             controlsVisibilityOverride = true;
-            ExecuteWhenLoaded(this, () => {
+            ExecuteWhenLoaded(this, () =>
+            {
                 backButton.Visibility = Visibility.Hidden;
                 forwardButton.Visibility = Visibility.Hidden;
             });
@@ -316,7 +318,8 @@ namespace MahApps.Metro.Controls
             else
             {
                 RoutedEventHandler handler = null;
-                handler = (o, a) => {
+                handler = (o, a) =>
+                {
                     flipview.Loaded -= handler;
                     System.Windows.Threading.Dispatcher.CurrentDispatcher.Invoke(body);
                 };
@@ -395,7 +398,8 @@ namespace MahApps.Metro.Controls
                 if (hideControlStoryboardCompletedHandler != null)
                     hideControlStoryboard.Completed -= hideControlStoryboardCompletedHandler;
 
-                hideControlStoryboardCompletedHandler = (sender, e) => {
+                hideControlStoryboardCompletedHandler = (sender, e) =>
+                {
                     try
                     {
                         hideControlStoryboard.Completed -= hideControlStoryboardCompletedHandler;
@@ -417,7 +421,8 @@ namespace MahApps.Metro.Controls
 
             else
             {
-                ExecuteWhenLoaded(this, () => {
+                ExecuteWhenLoaded(this, () =>
+                {
                     bannerLabel.Content = value ?? BannerText;
                 });
             }
@@ -439,7 +444,8 @@ namespace MahApps.Metro.Controls
             if (!flipview.IsLoaded)
             {
                 //wait to be loaded?
-                ExecuteWhenLoaded(flipview, () => {
+                ExecuteWhenLoaded(flipview, () =>
+                {
                     flipview.ApplyTemplate();
 
                     if ((bool)e.NewValue)
@@ -468,7 +474,15 @@ namespace MahApps.Metro.Controls
         }
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericAutomationPeer<FlipView>(this,  AutomationControlType.List);
+            var elements = new List<UIElement>();
+            elements.Add(presenter);
+            elements.Add(backButton);
+            elements.Add(forwardButton);
+            elements.Add(upButton);
+            elements.Add(downButton);
+            elements.Add(bannerGrid);
+            elements.Add(bannerLabel);
+            return new GenericAutomationPeer<FlipView>(this, elements, AutomationControlType.List);
         }
     }
 }

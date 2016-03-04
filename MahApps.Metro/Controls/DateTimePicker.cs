@@ -801,7 +801,19 @@
         }
         protected override AutomationPeer OnCreateAutomationPeer()
         {
-            return new GenericAutomationPeer<DateTimePicker>(this, AutomationControlType.Text);
+            var elements = new List<UIElement>();
+
+            elements.Add(_popup);
+             elements.Add(_button);
+            elements.Add(_hourInput);
+            elements.Add(_minuteInput);
+            elements.Add(_secondInput);
+            elements.Add(_hourHand);
+            elements.Add(_ampmSwitcher);
+            elements.Add(_minuteHand);
+            elements.Add(_secondHand);
+            elements.Add(_calendar);
+            return new GenericAutomationPeer<DateTimePicker>(this,elements, AutomationControlType.Text);
         }
     }
 }
