@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
+using System.Windows.Automation.Peers;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
@@ -1319,7 +1321,8 @@ namespace MahApps.Metro.Controls
             {
                 if (_autoToolTip == null)
                 {
-                    _autoToolTip = new ToolTip {
+                    _autoToolTip = new ToolTip
+                    {
                         Placement = PlacementMode.Custom,
                         CustomPopupPlacementCallback = PopupPlacementCallback
                     };
@@ -2024,6 +2027,19 @@ namespace MahApps.Metro.Controls
         {
             Increase,
             Decrease
+        }
+        protected override AutomationPeer OnCreateAutomationPeer()
+        {
+            var elements = new List<UIElement>();
+            elements.Add(_container);
+            elements.Add(_visualElementsContainer);
+            elements.Add(_centerThumb);
+            elements.Add(_leftButton);
+            elements.Add(_rightButton);
+            elements.Add(_leftThumb);
+            elements.Add(_rightThumb);
+            return new GenericAutomationPeer<RangeSlider>(this, elements, AutomationControlType.Slider);
+
         }
     }
 }
